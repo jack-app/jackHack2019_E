@@ -90,15 +90,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     // Override to create and configure nodes for anchors added to the view's session.
     func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
         // If this is our anchor, create a node
-        print("renderer")
-//        if self.detectedDataAnchor?.identifier == anchor.identifier {
-            let sphere = SCNSphere(radius: 1.0)
+        if self.detectedDataAnchor?.identifier == anchor.identifier {
+            let sphere = SCNSphere(radius: 0.1)
             sphere.firstMaterial?.diffuse.contents = UIColor.red
             let sphereNode = SCNNode(geometry: sphere)
             sphereNode.transform = SCNMatrix4(anchor.transform)
-            
+            print("renderer")
+
             return sphereNode
-//        }
+        }
         return nil
     }
 
@@ -134,7 +134,7 @@ extension ViewController {
             guard let payload = result.payloadStringValue else {return}
             // Get the bounding box for the bar code and find the center
             let rect = result.boundingBox
-            // Get center // YとXが入れ替わっているのは画像が90度回転してrequestに渡されているから
+            // Get center  ↓ YとXが入れ替わっているのは画像が90度回転してrequestに渡されているから
             let center = CGPoint(x: rect.midY*viewRect.width, y: rect.midX*viewRect.height)
             
             DispatchQueue.main.async {
@@ -148,12 +148,13 @@ extension ViewController {
     
     // QRコードのcenterから
     func hitTestQrCode(center: CGPoint) {
-        if let hitTestResults = sceneView?.hitTest(center, types: [.featurePoint]),
-            let hitTestResult = hitTestResults.first {
+        if let hitTestResults = sceneView?.hitTest(center, types: [.featurePoint]), let hitTestResult = hitTestResults.first {
             if let detectedDataAnchor = self.detectedDataAnchor, let node = self.sceneView.node(for: detectedDataAnchor) {
+                // 二回目以降の検出
                 let previousQrPosition = node.position
                 node.transform = SCNMatrix4(hitTestResult.worldTransform)
             } else {
+                // 一回目の検出
                 // Create an anchor. The node will be created in delegate methods
                 self.detectedDataAnchor = ARAnchor(transform: hitTestResult.worldTransform)
                 self.sceneView.session.add(anchor: self.detectedDataAnchor!)
