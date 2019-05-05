@@ -82,7 +82,30 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             }
         }
     }
-
+    
+    
+    // タップしたときの判定
+    
+    @IBAction func didTap(_ sender: UITapGestureRecognizer) {
+        let touchLocation = sender.location(in: sceneView)
+        let hitResults = sceneView.hitTest(touchLocation, options: [:])
+        
+        // タップ時にオブジェクトがあれば実行
+        if !hitResults.isEmpty {
+            // Show statistics such as fps and timing information
+            print(hitResults.first?.node.name)
+            var urlStr = hitResults.first?.node.name!
+            UIApplication.shared.open(URL(string: urlStr!)!, options: [:], completionHandler: nil)
+            sceneView.showsStatistics = false
+        }
+            
+            // タップ時にオブジェクトがなければ実行
+        else {
+            print("Empty")
+            sceneView.showsStatistics = true
+        }
+    }
+    
 
     // MARK: - ARSCNViewDelegate
     
