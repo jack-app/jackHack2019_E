@@ -15,6 +15,9 @@
 		5981B61C227D32B500032767 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5981B61A227D32B500032767 /* LaunchScreen.storyboard */; };
 		5981B627227D32B500032767 /* AQR2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5981B626227D32B500032767 /* AQR2Tests.swift */; };
 		5981B632227D32B500032767 /* AQR2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5981B631227D32B500032767 /* AQR2UITests.swift */; };
+		59F6E18E227E7A910025CD34 /* ARNodeMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59F6E18D227E7A910025CD34 /* ARNodeMaker.swift */; };
+		59F6E190227E82F30025CD34 /* HttpClientImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59F6E18F227E82F30025CD34 /* HttpClientImpl.swift */; };
+		59F6E192227E8A920025CD34 /* HTMLPaser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59F6E191227E8A920025CD34 /* HTMLPaser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +52,9 @@
 		5981B62D227D32B500032767 /* AQR2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AQR2UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5981B631227D32B500032767 /* AQR2UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AQR2UITests.swift; sourceTree = "<group>"; };
 		5981B633227D32B500032767 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		59F6E18D227E7A910025CD34 /* ARNodeMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARNodeMaker.swift; sourceTree = "<group>"; };
+		59F6E18F227E82F30025CD34 /* HttpClientImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpClientImpl.swift; sourceTree = "<group>"; };
+		59F6E191227E8A920025CD34 /* HTMLPaser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLPaser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,7 +111,10 @@
 				5981B615227D32B300032767 /* Main.storyboard */,
 				5981B618227D32B500032767 /* Assets.xcassets */,
 				5981B61A227D32B500032767 /* LaunchScreen.storyboard */,
+				59F6E18F227E82F30025CD34 /* HttpClientImpl.swift */,
 				5981B61D227D32B500032767 /* Info.plist */,
+				59F6E18D227E7A910025CD34 /* ARNodeMaker.swift */,
+				59F6E191227E8A920025CD34 /* HTMLPaser.swift */,
 			);
 			path = AQR2;
 			sourceTree = "<group>";
@@ -260,6 +269,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59F6E192227E8A920025CD34 /* HTMLPaser.swift in Sources */,
+				59F6E190227E82F30025CD34 /* HttpClientImpl.swift in Sources */,
+				59F6E18E227E7A910025CD34 /* ARNodeMaker.swift in Sources */,
 				5981B614227D32B300032767 /* ViewController.swift in Sources */,
 				5981B610227D32B300032767 /* AppDelegate.swift in Sources */,
 			);

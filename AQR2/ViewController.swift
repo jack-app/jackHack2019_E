@@ -91,13 +91,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
         // If this is our anchor, create a node
         if self.detectedDataAnchor?.identifier == anchor.identifier {
-            let sphere = SCNSphere(radius: 0.1)
-            sphere.firstMaterial?.diffuse.contents = UIColor.red
-            let sphereNode = SCNNode(geometry: sphere)
-            sphereNode.transform = SCNMatrix4(anchor.transform)
+            
+            var node = SCNNode()
+            if #available(iOS 12.0, *) {
+                node = ARNodeMaker().makeFromPayload(from: anchor.name!)
+            } else {
+                // Fallback on earlier versions
+                print("バージョンが古いよ")
+            }
+            node.transform = SCNMatrix4(anchor.transform)
             print("renderer")
-
-            return sphereNode
+            return node
+            
         }
         return nil
     }
@@ -138,7 +143,7 @@ extension ViewController {
             let center = CGPoint(x: rect.midY*viewRect.width, y: rect.midX*viewRect.height)
             
             DispatchQueue.main.async {
-                self.hitTestQrCode(center: center)
+                self.hitTestQrCode(center: center, payload: payload)
                 self.processing = false
             }
         } else {
@@ -147,7 +152,7 @@ extension ViewController {
     }
     
     // QRコードのcenterから
-    func hitTestQrCode(center: CGPoint) {
+    func hitTestQrCode(center: CGPoint, payload: String) {
         if let hitTestResults = sceneView?.hitTest(center, types: [.featurePoint]), let hitTestResult = hitTestResults.first {
             if let detectedDataAnchor = self.detectedDataAnchor, let node = self.sceneView.node(for: detectedDataAnchor) {
                 // 二回目以降の検出
@@ -156,7 +161,13 @@ extension ViewController {
             } else {
                 // 一回目の検出
                 // Create an anchor. The node will be created in delegate methods
-                self.detectedDataAnchor = ARAnchor(transform: hitTestResult.worldTransform)
+                if #available(iOS 12.0, *) {
+                    self.detectedDataAnchor = ARAnchor(name: payload, transform: hitTestResult.worldTransform)
+                } else {
+                    // Fallback on earlier versions
+//                    throw NSError(domain: "バージョンが古いよ", code: -1, userInfo: nil)
+                    print("バージョンが古い")
+                }
                 self.sceneView.session.add(anchor: self.detectedDataAnchor!)
                 print("add anchor")
             }
