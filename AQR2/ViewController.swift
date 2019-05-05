@@ -15,6 +15,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     
     var qrRequests = [VNRequest]()
     var detectedDataAnchor: ARAnchor?
+    var detectedDataAnchors:[ARAnchor] = []
+    var alreadyReadPayload:[String] = []
     var processing = false
     var viewRect = CGRect()
 
@@ -114,7 +116,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
     func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
         // If this is our anchor, create a node
         if self.detectedDataAnchor?.identifier == anchor.identifier {
-            
             var node = SCNNode()
             if #available(iOS 12.0, *) {
                 node = ARNodeMaker().makeFromPayload(from: anchor.name!)
@@ -125,7 +126,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             node.transform = SCNMatrix4(anchor.transform)
             print("renderer")
             return node
-            
         }
         return nil
     }
@@ -177,22 +177,26 @@ extension ViewController {
     // QRコードのcenterから
     func hitTestQrCode(center: CGPoint, payload: String) {
         if let hitTestResults = sceneView?.hitTest(center, types: [.featurePoint]), let hitTestResult = hitTestResults.first {
-            if let detectedDataAnchor = self.detectedDataAnchor, let node = self.sceneView.node(for: detectedDataAnchor) {
-                // 二回目以降の検出
-                let previousQrPosition = node.position
-                node.transform = SCNMatrix4(hitTestResult.worldTransform)
-            } else {
-                // 一回目の検出
-                // Create an anchor. The node will be created in delegate methods
+            // 1回目か2回目かを判断するif分
+            if !alreadyReadPayload.contains(payload) {
+                // 1回目
+                print("含まれていません")
+                alreadyReadPayload.append(payload)
                 if #available(iOS 12.0, *) {
                     self.detectedDataAnchor = ARAnchor(name: payload, transform: hitTestResult.worldTransform)
+                    detectedDataAnchors.append(detectedDataAnchor!)
+                    self.sceneView.session.add(anchor: self.detectedDataAnchor!)
+                    print("add anchor")
                 } else {
                     // Fallback on earlier versions
-//                    throw NSError(domain: "バージョンが古いよ", code: -1, userInfo: nil)
-                    print("バージョンが古い")
                 }
-                self.sceneView.session.add(anchor: self.detectedDataAnchor!)
-                print("add anchor")
+            } else {
+                // 2回目
+                print("含まれています")
+                detectedDataAnchor = searchAnchorBy(name: payload)
+                let node = self.sceneView.node(for: detectedDataAnchor!)!
+                let previousQrPosition = node.position
+                node.transform = SCNMatrix4(hitTestResult.worldTransform)
             }
         }
     }
@@ -208,5 +212,17 @@ extension ViewController {
         let node = SCNNode(geometry: box)
         node.position = vector
         sceneView.scene.rootNode.addChildNode(node)
+    }
+    
+    func searchAnchorBy(name: String) -> ARAnchor{
+        var anchor: ARAnchor!
+        detectedDataAnchors.forEach{ a in
+            if #available(iOS 12.0, *) {
+                if (a.name! == name) {anchor = a}
+            } else {
+                // Fallback on earlier versions
+            }
+        }
+        return anchor
     }
 }
