@@ -10,9 +10,10 @@ import Foundation
 
 class HTMLPaser {
     func getOgImageURL(htmlStr :String) -> URL {
-        let pattern = "^<meta.+(\"|')((http|https)://.+\\.(png|jpg|jpeg))(\"|').*>$"
-        let imageUrl = htmlStr.capture(pattern: pattern, group: 1)
-        return URL(string: "https://www.hackingwithswift.com/apple-icon-57x57.png")!
+        let pattern = "<meta.+(\"|')(.+\\.(png|jpg|jpeg|ico))(\"|').+>"
+        let imageUrl = htmlStr.capture(pattern: pattern, group: 2)
+        return URL(string: imageUrl!)!
+//        return URL(string: "https://hashibaminone.com/wp-content/uploads/2018/08/LINEタイムラインの最適な画像サイズ.jpg")!
     }
 }
 
